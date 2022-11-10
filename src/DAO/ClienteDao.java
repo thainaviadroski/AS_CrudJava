@@ -4,7 +4,7 @@
  */
 package DAO;
 
-import controle.CadastroCliente;
+import controle.ControllerCliente;
 import modelo.Cliente;
 import modelo.Pessoa;
 
@@ -16,13 +16,13 @@ import java.sql.SQLException;
  */
 public class ClienteDao extends DAO {
 
-	static PessoaDao p = new PessoaDao();
+	static PessoaDao pessoaDao = new PessoaDao();
 	static DAO dao;
 
-	public static void save() {
+	public static void save(Pessoa p) {
 		String cpf = "";
 		Cliente c = new Cliente();
-		int idPessoa = p.searchByCpf(cpf);
+		int idPessoa = pessoaDao.searchByCpf(cpf);
 
 		if (idPessoa != 0) {
 			try {
@@ -37,18 +37,12 @@ public class ClienteDao extends DAO {
 				throw new RuntimeException(e);
 			}
 		} else {
-			c = CadastroCliente.cadastrar();
-			String sqlPessoa = "INSERT INTO public.pessoa	(nome, cpf, dataNasci, endereco ) values (?,?,?,?) ";
+			c = ControllerCliente.cadastrar();
+			PessoaDao pessoaDao = new PessoaDao();
 
-			try {
-				PreparedStatement ps = dao.criarPreparedStatement(sqlPessoa);
-				ps.setString(1, c.getNome());
-				ps.setString(2, c.getCpf());
-				ps.setDate(3, new java.sql.Date(c.getDataNasc().getTime()));
+			pessoaDao.salvar(p);
 
-			} catch (SQLException e) {
-				throw new RuntimeException(e);
-			}
+
 		}
 
 

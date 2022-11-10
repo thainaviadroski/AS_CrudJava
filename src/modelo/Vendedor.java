@@ -1,6 +1,7 @@
 package modelo;
 
 import java.time.LocalDate;
+import java.util.Date;
 
 
 public class Vendedor extends Pessoa{
@@ -10,7 +11,7 @@ public class Vendedor extends Pessoa{
     public Vendedor() {
     }
 
-    public Vendedor(double percentualComissao, double salario, String nome, String cpf, LocalDate dataNasc, Endereco endereco) {
+    public Vendedor(double percentualComissao, double salario, String nome, String cpf, Date dataNasc, Endereco endereco) {
         super(nome, cpf, dataNasc, endereco);
         this.percentualComissao = percentualComissao;
         this.salario = salario;

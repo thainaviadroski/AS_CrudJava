@@ -50,7 +50,7 @@ public class CadastroContrato {
 
         System.out.println("Digite o cpf para buscar o cadastro do Cliente:");
         cpf = Input.next();
-        contrato.setCliente((Cliente) CadastroCliente.pesquisar(cpf));
+        contrato.setCliente((Cliente) ControllerCliente.pesquisar(cpf));
         if (contrato.getCliente() == null) {
             System.out.println("falha ao atribuir o cliente ao contrato!");
         }

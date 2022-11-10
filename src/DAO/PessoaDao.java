@@ -156,7 +156,7 @@ public class PessoaDao extends DAO {
 	public int searchByCpf(String cpf) {
 		int id = 0;
 
-		String sql = "select id from pessoa where cpf='" + cpf + "';";
+		String sql = "select id from public.pessoa where cpf='" + cpf + "';";
 
 		try {
 			ResultSet rs = dao.consultaSQL(sql);

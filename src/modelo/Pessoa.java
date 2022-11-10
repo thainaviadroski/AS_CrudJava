@@ -71,7 +71,7 @@ public class Pessoa implements Comparable<Pessoa> {
 	}
 
 	public void exibirInformacoes() {
-		System.out.print(nome + " CPF: " + cpf + " Data de Nascimento: " + DateUtils.formatarDataBR(dataNasc));
+		System.out.print(nome + " CPF: " + cpf + " Data de Nascimento: " + dataNasc);
 		endereco.exibirInformacoes();
 	}
 

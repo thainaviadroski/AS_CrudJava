@@ -1,10 +1,8 @@
 package controle;
 
-import java.util.ArrayList;
 import modelo.Cliente;
-import modelo.Pessoa;
 
-public class CadastroCliente extends CadastroPessoa {
+public class ControllerCliente extends CadastroPessoa {
 
     public static Cliente cadastrar() {
         Cliente c = new Cliente();
