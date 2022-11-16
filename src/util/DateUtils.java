@@ -214,4 +214,9 @@ public class DateUtils {
 		return d;
 	}
 
+	public static String dataFormat(Date d) {
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+		return sdf.format(d);
+	}
+
 }

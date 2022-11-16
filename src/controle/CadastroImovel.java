@@ -67,9 +67,9 @@ public class CadastroImovel {
 
         System.out.println("Digite o cpf para buscar o cadastro:");
         String cpf = Input.next();
-        imovel.setProprietario(CadastroPessoa.pesquisar(cpf));
+        imovel.setProprietario(ControllerPessoa.pesquisar(cpf));
         if (imovel.getProprietario() == null) { // caso não encontrar a pessoa com o cpf digitado, criar um novo cadastro de pessoa
-            imovel.setProprietario(CadastroPessoa.cadastrar());
+            imovel.setProprietario(ControllerPessoa.cadastrar());
         }
 
         if (imovel instanceof ImovelRural) {

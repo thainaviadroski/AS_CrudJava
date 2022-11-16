@@ -1,31 +1,32 @@
 package controle;
 
+import DAO.ClienteDao;
 import modelo.Cliente;
+import modelo.Pessoa;
+import util.DateUtils;
 
-public class ControllerCliente extends CadastroPessoa {
+import java.util.List;
 
-    public static Cliente cadastrar() {
-        Cliente c = new Cliente();
-        setarInformacoes(c);
-        return c;
-    }
+public class ControllerCliente extends ControllerPessoa {
+	static ClienteDao clienteDao = new ClienteDao();
 
-    public static void listar() {
-        if (pessoas == null || pessoas.isEmpty()) {
-            System.out.println("A Lista está Vazia!");
-        } else {
-            ordenarLista(pessoas);
-            System.out.println("\n#########---------- Cadastro de Clientes ----------#########");
-            int n = 1;
-            for (int i = 0; i < pessoas.size(); i++) {
-                if (pessoas.get(i) instanceof Cliente) {
-                    Cliente cli = (Cliente) pessoas.get(i);
-                    System.out.print("\n" + (n++) + ". ");
-                    cli.exibirInformacoes();
-                }
-            }
-            System.out.println("\n#########---------- ######### ----------#########");
-        }
-    }
+	public static Cliente cadastrar() {
+		Cliente c = new Cliente();
+		setarInformacoes(c);
+
+		clienteDao.save(c);
+		return c;
+	}
+
+	public static void listar() {
+		List<Pessoa> pessoas = ClienteDao.findAll();
+
+		pessoas.stream().map(cliente -> "Nome: " + cliente.getNome() + "\nCPF: " + cliente.getCpf()
+						+ "\nData de Nascimeto:" + DateUtils.dataFormat(cliente.getDataNasc())
+						+ "\nEndereço: Rua " + cliente.getEndereco().getRua() + ", Nª" + cliente.getEndereco().getNumero() + " - "
+						+ cliente.getEndereco().getCidade())
+				.forEach(System.out::println);
+
+	}
 
 }

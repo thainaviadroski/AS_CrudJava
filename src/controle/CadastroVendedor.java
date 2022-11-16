@@ -1,11 +1,9 @@
 package controle;
 
-import java.util.ArrayList;
-import modelo.Pessoa;
 import modelo.Vendedor;
 import util.Input;
 
-public class CadastroVendedor extends CadastroPessoa {
+public class CadastroVendedor extends ControllerPessoa {
 
     public static Vendedor cadastrar() {
         Vendedor v = new Vendedor();
@@ -19,7 +17,7 @@ public class CadastroVendedor extends CadastroPessoa {
     }
 
     public static void setarInformacoes(Vendedor v) {
-        CadastroPessoa.setarInformacoes(v);
+        ControllerPessoa.setarInformacoes(v);
 
         System.out.print("\nSalário: ");
         v.setSalario(Input.nextDouble());

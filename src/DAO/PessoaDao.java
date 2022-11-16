@@ -8,6 +8,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 
 import modelo.Pessoa;
 
@@ -24,23 +25,22 @@ public class PessoaDao extends DAO {
 		daoEndereco = new DaoEndereco();
 	}
 
-	public ArrayList<Pessoa> carregarPessoas() {
+	public List<Pessoa> carregarPessoas() {
 		ArrayList<Pessoa> listaPessoas = new ArrayList<>();
 		try {
-			String sql = "SELECT * FROM public.pessoa left join endereco as ed on id_endereco = ed.id";
+			String sql = "SELECT p.id as idPessoa, p.nome, p.cpf, p.dataNasc, e.id as idEndereco, e.cidade, e.rua, e.numero FROM pessoa AS p LEFT JOIN endereco AS e ON p.endereco = e.id;";
 			ResultSet rs = consultaSQL(sql);
 			while (rs.next()) {
 				Pessoa p = new Pessoa();
-				p.setId(rs.getInt("id"));
+				p.setId(rs.getInt("idPessoa"));
 				p.setNome(rs.getString("nome"));
 				p.setCpf(rs.getString("cpf"));
+				p.setDataNasc(rs.getDate("dataNasc"));
+				p.getEndereco().setId(rs.getInt("idEndereco"));
+				p.getEndereco().setCidade(rs.getString("cidade"));
+				p.getEndereco().setRua(rs.getString("rua"));
+				p.getEndereco().setNumero(rs.getInt("numero"));
 
-				if (rs.getObject("id_endereco", Integer.class) != null) {
-					p.getEndereco().setId(rs.getInt("id_endereco"));
-					p.getEndereco().setCidade(rs.getString("cidade"));
-					p.getEndereco().setRua(rs.getString("rua"));
-					p.getEndereco().setNumero(rs.getInt("numero"));
-				}
 				listaPessoas.add(p);
 			}
 
@@ -53,9 +53,7 @@ public class PessoaDao extends DAO {
 	public Pessoa carregarPorId(int idPessoa) {
 		Pessoa cl = null;
 		try {
-			String sql = "SELECT * FROM public.pessoa \n"
-					+ "left join endereco as ed on id_endereco = ed.id"
-					+ " where pessoa.id = " + idPessoa;
+			String sql = "SELECT * FROM pessoa left join endereco as ed on id_endereco = ed.id  where pessoa.id = " + idPessoa;
 			ResultSet rs = consultaSQL(sql);
 			if (rs.next()) {
 				cl = new Pessoa();
@@ -71,38 +69,35 @@ public class PessoaDao extends DAO {
 				}
 			}
 		} catch (SQLException e) {
-			System.out.println("Falha ao carregar pessoa!\n"
-					+ e.getMessage());
+			System.out.println("Falha ao carregar pessoa!\n" + e.getMessage());
 		}
 		return cl;
 	}
 
 	public boolean salvar(Pessoa pessoa) {
 		try {
-			String sql = "INSERT INTO public.pessoa(\n"
-					+ " id, nome, cpf, id_endereco)\n"
-					+ " VALUES (?, ?, ?, ?, ?)";
+			String sql = "INSERT INTO pessoa (nome, cpf, endereco) VALUES (?, ?, ?)";
 
 			PreparedStatement ps = criarPreparedStatement(sql);
-			pessoa.setId(gerarProximoId("pessoa"));
-			ps.setInt(1, pessoa.getId());
-			ps.setString(2, pessoa.getNome());
-			ps.setString(3, pessoa.getCpf());
+
+			ps.setString(1, pessoa.getNome());
+			ps.setString(2, pessoa.getCpf());
 
 			if (pessoa.getEndereco() != null) {
 				if (pessoa.getEndereco().getId() == 0) {
-					daoEndereco.salvar(pessoa.getEndereco());
+					int id = daoEndereco.salvar(pessoa.getEndereco());
+					pessoa.getEndereco().setId(id);
 				}
-				ps.setInt(4, pessoa.getEndereco().getId());
-			} else {
-				ps.setObject(5, null);
+				ps.setInt(3, pessoa.getEndereco().getId());
 			}
-			ps.executeUpdate();
+			ps.execute();
 			return true;
 		} catch (SQLException ex) {
+			ex.printStackTrace();
 			try {
 				getConexao().rollback();
 			} catch (SQLException ex1) {
+				ex1.printStackTrace();
 				System.out.println("Falhar ao realizar RollBack");
 			}
 			System.out.println("Falha ao salvar Pessoa\n" + ex.getMessage());
@@ -110,41 +105,37 @@ public class PessoaDao extends DAO {
 		}
 	}
 
-    public boolean atualizar(Pessoa pessoa) {
-        try {
-            String sql = "UPDATE public.pessoa\n"
-                    + "SET nome=?, cpf=?, id_endereco=? \n"
-                    + " WHERE id= " + pessoa.getId();
+	public boolean atualizar(Pessoa pessoa) {
+		try {
+			String sql = "UPDATE pessoa SET nome=?, cpf=?, id_endereco=? WHERE id= " + pessoa.getId();
 
-            PreparedStatement ps = criarPreparedStatement(sql);
-            ps.setString(1, pessoa.getNome());
-            ps.setString(2, pessoa.getCpf());
+			PreparedStatement ps = criarPreparedStatement(sql);
+			ps.setString(1, pessoa.getNome());
+			ps.setString(2, pessoa.getCpf());
 
-            if (pessoa.getEndereco() != null) {
-                if (pessoa.getEndereco().getId() != 0) {
-                    daoEndereco.salvar(pessoa.getEndereco());
-                } else {
-                    daoEndereco.atualizar(pessoa.getEndereco());
-                }
-                ps.setInt(3, pessoa.getEndereco().getId());
-            } else {
-                ps.setObject(4, null);
-            }
+			if (pessoa.getEndereco() != null) {
+				if (pessoa.getEndereco().getId() != 0) {
+					daoEndereco.salvar(pessoa.getEndereco());
+				} else {
+					daoEndereco.atualizar(pessoa.getEndereco());
+				}
+				ps.setInt(3, pessoa.getEndereco().getId());
+			} else {
+				ps.setObject(4, null);
+			}
 
-            ps.executeUpdate();
-            return true;
-        } catch (SQLException e) {
-            System.out.println("Falha ao editar pessoa!\n" + e.getMessage());
-            return false;
-        }
-    }
+			ps.executeUpdate();
+			return true;
+		} catch (SQLException e) {
+
+			System.out.println("Falha ao editar pessoa!\n" + e.getMessage());
+			return false;
+		}
+	}
 
 	public boolean remover(Pessoa pessoa) {
 		try {
-			String sql = "DELETE FROM public.pessoa\n"
-					+ " WHERE id =" + pessoa.getId()
-					+ "; " + daoEndereco.comandoSqlRemover(pessoa.getEndereco());
-
+			String sql = "DELETE FROM pessoa WHERE id =" + pessoa.getId() + "; " + daoEndereco.comandoSqlRemover(pessoa.getEndereco());
 			executeSql(sql);
 			return true;
 		} catch (SQLException e) {
@@ -156,7 +147,7 @@ public class PessoaDao extends DAO {
 	public int searchByCpf(String cpf) {
 		int id = 0;
 
-		String sql = "select id from public.pessoa where cpf='" + cpf + "';";
+		String sql = "select id from pessoa where cpf='" + cpf + "';";
 
 		try {
 			ResultSet rs = dao.consultaSQL(sql);
@@ -172,6 +163,6 @@ public class PessoaDao extends DAO {
 			System.out.println("Pesosa não encontrada!!");
 		}
 
-		return 0;
+		return id;
 	}
 }

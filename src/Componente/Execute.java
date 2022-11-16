@@ -1,5 +1,6 @@
 package Componente;
 
+import controle.ControllerCliente;
 import util.Input;
 
 public abstract class Execute {
@@ -44,9 +45,11 @@ public abstract class Execute {
 		switch (op) {
 			case 1:
 				System.out.println("Cadastar Cliente:");
+				ControllerCliente.cadastrar();
 				break;
 			case 2:
-				System.out.println("Listar de Clientes:");
+				System.out.println("Listar todos Clientes:");
+				ControllerCliente.listar();
 				break;
 			case 3:
 				System.out.println("Buscar Cliente:");

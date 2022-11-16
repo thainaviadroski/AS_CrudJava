@@ -65,11 +65,6 @@ public class Pessoa implements Comparable<Pessoa> {
 		this.dataNasc = dataNasc;
 	}
 
-	@Override
-	public String toString() {
-		return "Pessoa{" + "nome=" + nome + ", cpf=" + cpf + ", dataNasc=" + dataNasc + ", endereco=" + endereco + '}';
-	}
-
 	public void exibirInformacoes() {
 		System.out.print(nome + " CPF: " + cpf + " Data de Nascimento: " + dataNasc);
 		endereco.exibirInformacoes();
@@ -80,4 +75,9 @@ public class Pessoa implements Comparable<Pessoa> {
 		return nome.compareTo(outraPessoa.getNome());
 	}
 
+
+	@Override
+	public String toString() {
+		return "Pessoa{" + "id=" + id + ", nome='" + nome + '\'' + ", cpf='" + cpf + '\'' + ", dataNasc=" + dataNasc + ", endereco=" + endereco + '}';
+	}
 }
