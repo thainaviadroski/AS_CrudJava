@@ -144,7 +144,7 @@ public class PessoaDao extends DAO {
 		}
 	}
 
-	public int searchByCpf(String cpf) {
+	public int findByCpfAndReturnId(String cpf) {
 		int id = 0;
 
 		String sql = "select id from pessoa where cpf='" + cpf + "';";
@@ -164,5 +164,32 @@ public class PessoaDao extends DAO {
 		}
 
 		return id;
+	}
+
+	public Pessoa findByCPF(String cpf) {
+		int id = 0;
+
+		try {
+			String sql = "SELECT p.id as idPessoa, p.nome, p.cpf, p.dataNasc, e.id as idEndereco, " + "e.cidade, e.rua, e.numero FROM pessoa AS p LEFT JOIN endereco AS e ON p.endereco = e.id; ";
+			ResultSet rs = consultaSQL(sql);
+			while (rs.next()) {
+				Pessoa p = new Pessoa();
+				p.setId(rs.getInt("idPessoa"));
+				p.setNome(rs.getString("nome"));
+				p.setCpf(rs.getString("cpf"));
+				p.setDataNasc(rs.getDate("dataNasc"));
+				p.getEndereco().setId(rs.getInt("idEndereco"));
+				p.getEndereco().setCidade(rs.getString("cidade"));
+				p.getEndereco().setRua(rs.getString("rua"));
+				p.getEndereco().setNumero(rs.getInt("numero"));
+
+				return p;
+			}
+
+		} catch (SQLException e) {
+			System.out.println("Falha ao carregar pessoa!\n" + e.getMessage());
+		}
+
+		return null;
 	}
 }

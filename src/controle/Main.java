@@ -19,8 +19,8 @@ public class Main {
         Imovel imovel1 = new ImovelUrbano("123", proprietario1, new Endereco("Cascavel", 1200, "Parana"), 12, 23, 120000);
         Imovel imovel2 = new ImovelRural("456", proprietario1, new Endereco("Cascavel", 3560, "Tito Muffato"), 15, 20, 175000);
         
-        CadastroImovel.getImoveis().add(imovel1);
-        CadastroImovel.getImoveis().add(imovel2);
+        ControllerImovel.getImoveis().add(imovel1);
+        ControllerImovel.getImoveis().add(imovel2);
         
         Cliente cliente1 = new Cliente("Ana", "222", DateUtils.createDate(12, 5, 2000), new Endereco("cascavel", 800, "Carlos gomes"));
         Cliente cliente2 = new Cliente("Paulo", "333", DateUtils.createDate(13, 4, 2000), new Endereco("cascavel", 1340, "Manaus"));
@@ -87,20 +87,20 @@ public class Main {
             String matricula = null;
             switch (op) {
                 case 1:
-                    CadastroImovel.cadastrar();
+                    ControllerImovel.cadastrar();
                     break;
                 case 2:
                     System.out.println("informe a matrícula do imóvel: ");
                     matricula = Input.next();
-                    CadastroImovel.editar(CadastroImovel.pesquisar(matricula));
+                    ControllerImovel.editar(ControllerImovel.pesquisar(matricula));
                     break;
                 case 3:
                     System.out.println("informe a matrícula do imóvel: ");
                     matricula = Input.next();
-                    CadastroImovel.remover(CadastroImovel.pesquisar(matricula));
+                    ControllerImovel.remover(ControllerImovel.pesquisar(matricula));
                     break;
                 case 4:
-                    CadastroImovel.listar();
+                    ControllerImovel.listar();
                     break;
                 default:
                     if(op != 0){ 

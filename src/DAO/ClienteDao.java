@@ -17,7 +17,7 @@ public class ClienteDao extends DAO {
 
 	public static void save(Pessoa p) {
 		Cliente c = new Cliente();
-		int idPessoa = pessoaDao.searchByCpf(p.getCpf());
+		int idPessoa = pessoaDao.findByCpfAndReturnId(p.getCpf());
 
 		if (idPessoa != 0) {
 			try {
@@ -74,7 +74,7 @@ public class ClienteDao extends DAO {
 
 		try {
 			PreparedStatement ps = dao.criarPreparedStatement(sql);
-			ps.setString(1 , cpf);
+			ps.setString(1, cpf);
 
 			ResultSet rs = dao.consultaSQL(sql);
 

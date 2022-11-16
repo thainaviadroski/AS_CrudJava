@@ -57,7 +57,7 @@ public class CadastroContrato {
 
         System.out.println("Digite a matricula do imóvel para buscar o cadastro:");
         String matricula = Input.next();
-        contrato.setImovel(CadastroImovel.pesquisar(matricula));
+        contrato.setImovel(ControllerImovel.pesquisar(matricula));
         if (contrato.getImovel() == null) {
             System.out.println("falha ao atribuir o imóvel ao contrato!");
         }

@@ -97,11 +97,6 @@ public class ControllerPessoa {
 	}
 
 	public static Pessoa pesquisar(String cpf) {
-		for (Pessoa p : pessoas) {
-			if (cpf.compareTo(p.getCpf()) == 0) {
-				return p;
-			}
-		}
-		return null;
+		return pessoaDao.findByCPF(cpf);
 	}
 }
